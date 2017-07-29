@@ -21,16 +21,21 @@
     <!-- background plugin stylesheet -->
     <link rel="stylesheet" href="//releases.flowplayer.org/background/flowplayer.background.css">
     <link href="http://vjs.zencdn.net/6.2.4/video-js.css" rel="stylesheet">
-    <script src="http://vjs.zencdn.net/4.11/video.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Archivo+Narrow" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:700|Dosis|Teko:500" rel="stylesheet">
+
 
     {% block extend-style %}
 
 <style type="text/css">
+
     body {
+        font-family: 'Teko', sans-serif;
         background-image:url({% static "images/background.jpg" %});
         color: #fff;
     }
     .inputMessage {
+        /*font-family: 'Merriweather', sans-serif;*/
         background: #141828;
         border: 2px solid rgba(27,29,33,0.78);
         width: 95%;
@@ -42,20 +47,26 @@
     }
 
     .chatArea {
-        height: 400px;
-        border: thin solid #aaa;
+        background: rgba(200,200,200,0.05);
+        height: 410px;
+        /*border-left: thin solid #aaa;*/
         margin-left: -10px;
     }
 
     .keyArea {
         height: 200px;
-        border: thin solid #aaa;
+        background: rgba(200,200,200,0.05);
+        /*border: thin solid #aaa;*/
         margin-left: -10px;
     }
 
 
     .keys {
-    text-align:center;
+        text-align:center;
+        background: rgba(250, 250, 250, 0.1);
+        height: 200px;
+        /*width: 80%; */
+        border-radius:10px;
     }
     /*top right bottom left*/
     .key {
@@ -90,6 +101,27 @@
         width:auto;
         padding:0 12px;
     }
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+ 
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border-top: 2px solid #07d;
+  border-right: 2px solid transparent;
+  animation: spinner .5s linear infinite;
+}
+
 </style>
 
     {% endblock extend-style %}
@@ -193,7 +225,11 @@
             </div>
             <div class="row" style="height: 480px;">
                 <div class="col-md-9">
-                    <video id="video" style="width: 100%;"></video>
+                    <div id="loader"></div>
+                    <video id="video" style="width: 100%; border-radius:5px">
+                        
+
+                    </video>
                 </div>
                 <div class="col-md-3" style="height: 100%;">
                     <div>
@@ -208,28 +244,30 @@
             <div class="row" style="height: 50px;"></div>
             <div class="row" style="height: 300px;">
                 <div class="col-md-9">
-                    <div class="keys">
-                        <div class="key" id="left"><span><i class="fa fa-arrow-left" aria-hidden="true"></i></span></div>
-                        <div class="key" id="right"><span><i class="fa fa-arrow-right" aria-hidden="true"></i></span></div>
-                        <div class="key" id="up"><span><i class="fa fa-arrow-up" aria-hidden="true"></i></span></div>
-                        <div class="key" id="down"><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>
-                        {# <div class="key"><span>&rarr;</span></div> #}
-                        {# <div class="key"><span>&larr;</span></div> #}
-                        {# <div class="key"><span>&uarr;</span></div> #}
-                        {# <div class="key"><span>&darr;</span></div> #}
-                        <div class="key" id="q"><span>Q</span></div>
-                        <div class="key" id="w"><span>W</span></div>
-                        <div class="key" id="e"><span>E</span></div>
-                        <div class="key" id="r"><span>R</span></div>
-                        <div class="key wide" id="space"><span>SPACE</span></div>
-                        <div class="key wide" id="enter"><span>ENTER</span></div>
-                    </div>
+                    {# <div style="background: rgba(250, 250, 250, 0.1); height: 200px; width: 80%; border-radius:20px;"> #}
+                        <div class="keys">
+                            <div class="key" id="left"><span><i class="fa fa-arrow-left" aria-hidden="true"></i></span></div>
+                            <div class="key" id="right"><span><i class="fa fa-arrow-right" aria-hidden="true"></i></span></div>
+                            <div class="key" id="up"><span><i class="fa fa-arrow-up" aria-hidden="true"></i></span></div>
+                            <div class="key" id="down"><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>
+                            {# <div class="key"><span>&rarr;</span></div> #}
+                            {# <div class="key"><span>&larr;</span></div> #}
+                            {# <div class="key"><span>&uarr;</span></div> #}
+                            {# <div class="key"><span>&darr;</span></div> #}
+                            <div class="key" id="q"><span>Q</span></div>
+                            <div class="key" id="w"><span>W</span></div>
+                            <div class="key" id="e"><span>E</span></div>
+                            <div class="key" id="r"><span>R</span></div>
+                            <div class="key wide" id="space"><span>SPACE</span></div>
+                            <div class="key wide" id="enter"><span>ENTER</span></div>
+                        </div>
+                    {# </div> #}
                 </div>
 
                 <div class="col-md-3">
                     <div>
                         <div class="keyArea">
-                            <ul class="keyevent"></ul>
+                            <ul class="keyevent" style="height: 100%;"></ul>
                         </div>
                         {# <input class="inputMessage" placeholder="Let's chat"/> #}
                     </div>
@@ -248,18 +286,22 @@
 
 
 <script>
-
+var loader = $("#loader");
+loader.addClass('spinner');
     if(Hls.isSupported()) {
         var video = document.getElementById('video');
         var hls = new Hls();
-        hls.loadSource("https://wowza.jwplayer.com/live/jelly.stream/playlist.m3u8");
+        hls.loadSource("https://video-weaver.tpe01.hls.ttvnw.net/v1/playlist/Cv8CJYXv-HfRLbyi8GqrEYCJtWLG_auAfeM2wI0XBYbE18j1I4HqyrcJHq6tgnZW6Hxbgrcx72r_L8tr_CyfLxlztq38F9e1sj2PbGdfXpoCIZ5-rcP08j-WzrblnY0ZkK4F2nQwzGQdD_d6mA6i3saoR_Xw9-nWmHUKGQFWzotEopplVJEdmNJwdUU4IBz3cdhJeJCZOvugDlkr4VFfgNo2WVF4iRm1aohoxd3HOLqo_aBp117MGiro1Zb1dKSYq4XTcJFbe9fBQF_vJQorNU_pJtnHMZ1fNnzfLOjmXf1q46P4cMAqZv5EI_onxylX-zl6728CkoZtacATE2s5fV00-N8PCuS1GQspFiNiPLeo1vZtjPxMUPWB5ZCbVEFpKcgnnfARm4nr6EEEMfZNJt5bZTdX6LrRBmaHMP8Evlhd8NVZjFvpKFpBCP66VVwVO5432f7SYq2KOwy3LxM6ipm6eTbN5j2YFTQkvJQfllrrEA-0xHPssqngYnbWpniQBT4SEGvqbz6GqgZhh0uRkg77mWYaDKO5SSwGx5HVyBOTlQ.m3u8");
+        // hls.loadSource("https://wowza.jwplayer.com/live/jelly.stream/playlist.m3u8");
         // hls.loadSource("http:///localhost/hls/" + "{{ show.m3u8|safe }}" + "/index.m3u8");
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED,function() {
             video.play();
+            loader.removeClass('spinner');
+
         });
     }
-    
+
 </script>
 
 </body>
