@@ -35,7 +35,7 @@ $(function() {
   function addParticipantsMessage (data) {
     var message = '';
     if (data.numUsers === 1) {
-      message += "there's 1 participant";
+      message += "there's 7 participant";
     } else {
       message += "there are " + data.numUsers + " participants";
     }
@@ -282,7 +282,7 @@ $(function() {
   });
 
   socket.on('disconnect', function () {
-    log('you have been disconnected');
+    //log('you have been disconnected');
   });
 
   socket.on('reconnect', function () {
@@ -293,7 +293,7 @@ $(function() {
   });
 
   socket.on('reconnect_error', function () {
-    log('attempt to reconnect has failed');
+    //log('attempt to reconnect has failed');
   });
 
 });
