@@ -17,10 +17,12 @@ app.use(express.static(__dirname + '/public'));
 var numUsers = 0;
 
 io.on('connection', function (socket) {
+  console.log("on connection")
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
+    console.log("on_new_message:" + data)
     // we tell the client to execute 'new message'
     socket.broadcast.emit('new message', {
       username: socket.username,
@@ -30,6 +32,7 @@ io.on('connection', function (socket) {
 
   // when the client emits 'add user', this listens and executes
   socket.on('add user', function (username) {
+    console.log("on_add_user")
     if (addedUser) return;
 
     // we store the username in the socket session for this client
@@ -43,6 +46,14 @@ io.on('connection', function (socket) {
     socket.broadcast.emit('user joined', {
       username: socket.username,
       numUsers: numUsers
+    });
+  });
+
+  // when user press any key, we send it to host client
+  socket.on('press key', function(data) {
+    socket.broadcast.emit('press key', {
+       username: data.username,
+       key: data.key
     });
   });
 
