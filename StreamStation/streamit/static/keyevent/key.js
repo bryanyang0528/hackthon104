@@ -13,6 +13,10 @@ $(function() {
     var userNames = ["Bryan","Ryan", "Alan", "Dvaid", "Linus", "Kobe"];
     var event2key = {'65':'a', '66':'b', '67':'c', '68':'d', '69':'e', '70':'f', '71':'g', '72':'h', '73':'i', '74':'j', '75':'k', '76':'l', '77':'m', '78':'n', '79':'o', '80':'p', '81':'q', '82':'r', '83':'s', '84':'t', '85':'u', '86':'v', '87':'w', '88':'x', '89':'y', '90':'z', '37':'left', '39':'right', '38':'up', '40':'down', '13':'enter', '32':'space','48':'0','49':'1','50':'2','51':'3','52':'4','53':'5','54':'6','55':'7','56':'8','57':'9'};
     
+    function getRandomUser() {
+        return userNames[Math.floor(Math.random() * 100) % userNames.length];
+    }
+
     function getRandomColor() {
         var hash = Math.floor(Math.random() * 100)
         // Calculate color
@@ -30,9 +34,9 @@ $(function() {
         $parent[0].scrollTop = $parent[0].scrollHeight;
 
     }
-    function formatMessage(message) {
+    function formatMessage(message, user) {
         var $usernameDiv = $('<span class="username"/>')
-            .text(userNames[Math.floor(Math.random() * 100) % userNames.length])
+            .text(user)
             .css('color', getRandomColor());
         var $messageBodyDiv = $('<span class="messageBody">')
                 .text(message);
@@ -46,19 +50,18 @@ $(function() {
 
     $window.keydown(function (event) {
         var keycode = event.which || event.keyCode;
-        if ($inputMessage.is(":focus")) {
-
-        } else {
+        if (!$inputMessage.is(":focus")) {
             if (keycode in event2key && !keyPressed) {
                 var myKey = event2key[keycode];
                 $("#"+myKey).addClass('active');
-                addMessageElement($keyMessages, formatMessage(myKey));
+                addMessageElement($keyMessages, formatMessage(myKey, "You"));
                 
                 event.preventDefault(); // Prevent arrow-key from scrolling window
 
             }
+            keyPressed = true;
         }
-        keyPressed = true;
+        
     });
     $window.keyup(function (event) {
         var keycode = event.which || event.keyCode;
@@ -74,7 +77,7 @@ $(function() {
         setTimeout(function() {
                 var keys = Object.keys(event2key);
                 var myKey = event2key[keys[ keys.length * Math.random() << 0]];
-                addMessageElement($keyMessages, formatMessage(myKey));
+                addMessageElement($keyMessages, formatMessage(myKey, getRandomUser()));
                 if ($keyMessages.children().length > 10) {
                     $keyMessages.find('li:first').remove();
                 }

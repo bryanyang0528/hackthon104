@@ -36,9 +36,9 @@ $(function() {
         $parent[0].scrollTop = $parent[0].scrollHeight;
 
     }
-    function formatMessage(message) {
+    function formatMessage(message, user) {
         var $usernameDiv = $('<span class="username"/>')
-            .text(userNames[Math.floor(Math.random() * 100) % userNames.length])
+            .text(user)
             .css('color', getRandomColor());
         var $messageBodyDiv = $('<span class="messageBody">')
                 .text(message);
@@ -48,12 +48,27 @@ $(function() {
         return $messageDiv;
     }
 
+    // Prevents input from having injected markup
+    function cleanInput (input) {
+        return $('<div/>').text(input).text();
+    }
+
+    $window.keydown(function (event) {
+        var keycode = event.which || event.keyCode;
+        if ($inputMessage.is(":focus") && keycode === 13) {
+            var message = cleanInput($inputMessage.val()).trim();
+            if (message) {
+                addMessageElement($messages, formatMessage(message, "You"));
+            }
+            $inputMessage.val("");
+        }
+    });
+
     (function loop() {
         var rand = Math.round(Math.random() * (1000 - 500)) + 200;
         setTimeout(function() {
                 var chat = chatArray[Math.floor(Math.random() * 100) % chatArray.length];
-                // console.log(chat);
-                addMessageElement($messages, formatMessage(chat));
+                addMessageElement($messages, formatMessage(chat, userNames[Math.floor(Math.random() * 100) % userNames.length]));
                 if ($messages.children().length > 10) {
                     $messages.find('li:first').remove();
                 }

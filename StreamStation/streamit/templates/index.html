@@ -84,18 +84,21 @@
     }
     /*top right bottom left*/
     .key {
+        position: relative;
         border-style:solid;
         /*border-color:#D5D6AD #C1C1A8 #CDCBA5 #E7E5C5;*/
         border-color:rgb(173, 213, 214) rgb(168, 193, 193) rgb(165, 203, 205) rgb(197, 229, 231);
-        border-width:2px 3px 8px 3px;
-        background:#D6D4B4;
+        border-width:0px 1px 6px 1px;
+        background: rgb(180, 212, 214);
+        /*background:#D6D4B4;*/
         display:inline-block;
-        border-radius:5px;
+        border-radius:3px;
         margin:10px;
     }
 
     .key span {
-        background: #333399;
+        position: relative;
+        background: rgb(51, 51, 153);
         color: #fff;
         /*background:#ECEECA;*/
         /*color:#5D5E4F;*/
@@ -115,6 +118,17 @@
         width:auto;
         padding:0 12px;
     }
+
+    .key.active span {
+        background: #df158a;
+    }
+
+    .key.active {
+        top: 4px;
+        border-width:0px 1px 4px 1px;
+    }
+
+    
 
 @keyframes spinner {
   to {transform: rotate(360deg);}
