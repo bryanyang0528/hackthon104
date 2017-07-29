@@ -22,7 +22,7 @@ $(function() {
   var typing = false;
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
-
+  var userNames = ["Bryan","Ryan", "Alan", "Dvaid", "Linus", "Kobe"];
   var socket = io();
 
   setUsername();
@@ -37,10 +37,11 @@ $(function() {
     log(message);
   }
 
+
   // Sets the client's username
   function setUsername () {
     //username = cleanInput($usernameInput.val().trim());
-    username = "test" + Math.floor(Math.random() * 100)
+    username =  userNames[Math.floor(Math.random() * 100) % 6]
     // If the username is valid
     if (username) {
       $chatPage.show();
@@ -52,10 +53,11 @@ $(function() {
   }
 
   // Sends a chat message
-  function sendMessage () {
-    var message = $inputMessage.val();
+  function sendMessage (message) {
+    var message = message
     // Prevent markup from being injected into the message
     message = cleanInput(message);
+    console.log(message)
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
@@ -83,9 +85,9 @@ $(function() {
       options.fade = false;
       $typingMessages.remove();
     }
-
+ 
     var $usernameDiv = $('<span class="username"/>')
-      .text(data.username)
+      .text(userNames[Math.floor(Math.random() * 100) % 6])
       .css('color', getUsernameColor(data.username));
     var $messageBodyDiv = $('<span class="messageBody">')
       .text(data.message);
@@ -179,14 +181,24 @@ $(function() {
   // Gets the color of a username through our hash function
   function getUsernameColor (username) {
     // Compute hash code
-    var hash = 7;
-    for (var i = 0; i < username.length; i++) {
-       hash = username.charCodeAt(i) + (hash << 5) - hash;
-    }
+    var hash = Math.floor(Math.random() * 100)
     // Calculate color
     var index = Math.abs(hash % COLORS.length);
     return COLORS[index];
   }
+
+  var i = 0;                     //  set your counter to 1
+  var myStringArray = ["Hello","World", "HI","hi"];
+  function getChatContent () {           //  create a loop function
+     setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+        sendMessage(myStringArray[i])          //  your code here
+        i++;                     //  increment the counter
+        if (i < myStringArray.length) {            //  if the counter < 10, call the loop function
+           getChatContent();             //  ..  again which will trigger another 
+        }                        //  ..  setTimeout()
+     }, 1000)
+  }
+
 
   // Keyboard events
 
@@ -234,7 +246,8 @@ $(function() {
       prepend: true
     });
     addParticipantsMessage(data);
-  });
+    getChatContent();  
+});
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', function (data) {
