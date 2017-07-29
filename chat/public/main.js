@@ -23,10 +23,15 @@ $(function() {
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
   var userNames = ["Bryan","Ryan", "Alan", "Dvaid", "Linus", "Kobe"];
-  var socket = io();
-
+  var socket = io.connect('http://0.0.0.0:3000');
+  var chatArray = new Array();
+    $.get('chat.txt', function(data){
+            chatArray = data.split('\n');
+            console.log(chatArray);
+        });
+  
   setUsername();
-
+  
   function addParticipantsMessage (data) {
     var message = '';
     if (data.numUsers === 1) {
@@ -187,16 +192,15 @@ $(function() {
     return COLORS[index];
   }
 
-  var i = 0;                     //  set your counter to 1
-  var myStringArray = ["Hello","World", "HI","hi"];
+  //var i = 0;                     //  set your counter to 1
   function getChatContent () {           //  create a loop function
      setTimeout(function () {    //  call a 3s setTimeout when the loop is called
-        sendMessage(myStringArray[i])          //  your code here
-        i++;                     //  increment the counter
-        if (i < myStringArray.length) {            //  if the counter < 10, call the loop function
+        sendMessage(chatArray[Math.floor(Math.random() * 100) % chatArray.length])          //  your code here
+        //i++;                     //  increment the counter
+        if (true) {            //  if the counter < 10, call the loop function
            getChatContent();             //  ..  again which will trigger another 
         }                        //  ..  setTimeout()
-     }, 1000)
+     }, Math.floor(Math.random() * 1000))
   }
 
 
