@@ -1,0 +1,6 @@
+*.pyc
+build/
+data/
+migrations/
+__pycache__/
+
