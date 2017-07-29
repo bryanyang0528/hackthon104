@@ -240,9 +240,19 @@ $(function() {
       }
     } else {
       var myKey = event2key[keycode]
-      console.log(keycode, myKey)
+      //console.log(keycode, myKey)
       pressKey(myKey)
+      $("#"+myKey).toggleClass('active');
     }
+
+  $window.keyup(function (event) {
+    var keycode = event.which || event.keyCode;
+    var myKey = event2key[keycode]
+    $("#"+myKey).toggleClass('active');
+
+  });
+  
+  
 
 
   });
