@@ -23,7 +23,7 @@ $(function() {
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
   var userNames = ["Bryan","Ryan", "Alan", "Dvaid", "Linus", "Kobe"];
-  var socket = io.connect('http://0.0.0.0:3000');
+  var socket = io.connect('http://10.187.1.128:3000');
   var chatArray = new Array();
     $.get('chat.txt', function(data){
             chatArray = data.split('\n');
