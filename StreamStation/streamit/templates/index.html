@@ -75,7 +75,6 @@
         margin-left: -10px;
     }
 
-
     .keys {
         text-align:center;
         background: rgba(250, 250, 250, 0.1);
@@ -120,7 +119,8 @@
 @keyframes spinner {
   to {transform: rotate(360deg);}
 }
- 
+
+
 .spinner:before {
   content: '';
   box-sizing: border-box;
@@ -161,6 +161,7 @@ img {
   background: -moz-linear-gradient(-90deg, rgba(0, 215, 120, 0.1), rgba(20, 24, 40, 0.5));
   background: linear-gradient(-90deg, rgba(0, 215, 120, 0.1), rgba(20, 24, 40, 0.5));*/
 }
+
 
 </style>
 
@@ -291,10 +292,6 @@ img {
                             <div class="key" id="right"><span><i class="fa fa-arrow-right" aria-hidden="true"></i></span></div>
                             <div class="key" id="up"><span><i class="fa fa-arrow-up" aria-hidden="true"></i></span></div>
                             <div class="key" id="down"><span><i class="fa fa-arrow-down" aria-hidden="true"></i></span></div>
-                            {# <div class="key"><span>&rarr;</span></div> #}
-                            {# <div class="key"><span>&larr;</span></div> #}
-                            {# <div class="key"><span>&uarr;</span></div> #}
-                            {# <div class="key"><span>&darr;</span></div> #}
                             <div class="key" id="q"><span>Q</span></div>
                             <div class="key" id="w"><span>W</span></div>
                             <div class="key" id="e"><span>E</span></div>
@@ -308,7 +305,7 @@ img {
                 <div class="col-md-3">
                     <div>
                         <div class="keyArea">
-                            <ul class="keyevent" style="height: 100%;"></ul>
+                            <ul class="keymessages" style="height: 100%;"></ul>
                         </div>
                         {# <input class="inputMessage" placeholder="Let's chat"/> #}
                     </div>
@@ -340,6 +337,8 @@ img {
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.4/socket.io.min.js"></script>
 <script src="{% static "chatroom/chat.js" %}"></script>
+<script src="{% static "keyevent/key.js" %}"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 
@@ -350,7 +349,6 @@ loader.addClass('spinner');
     if(Hls.isSupported()) {
         var video = document.getElementById('video');
         var hls = new Hls();
-        // hls.loadSource("https://video-weaver.tpe01.hls.ttvnw.net/v1/playlist/Cv8CJYXv-HfRLbyi8GqrEYCJtWLG_auAfeM2wI0XBYbE18j1I4HqyrcJHq6tgnZW6Hxbgrcx72r_L8tr_CyfLxlztq38F9e1sj2PbGdfXpoCIZ5-rcP08j-WzrblnY0ZkK4F2nQwzGQdD_d6mA6i3saoR_Xw9-nWmHUKGQFWzotEopplVJEdmNJwdUU4IBz3cdhJeJCZOvugDlkr4VFfgNo2WVF4iRm1aohoxd3HOLqo_aBp117MGiro1Zb1dKSYq4XTcJFbe9fBQF_vJQorNU_pJtnHMZ1fNnzfLOjmXf1q46P4cMAqZv5EI_onxylX-zl6728CkoZtacATE2s5fV00-N8PCuS1GQspFiNiPLeo1vZtjPxMUPWB5ZCbVEFpKcgnnfARm4nr6EEEMfZNJt5bZTdX6LrRBmaHMP8Evlhd8NVZjFvpKFpBCP66VVwVO5432f7SYq2KOwy3LxM6ipm6eTbN5j2YFTQkvJQfllrrEA-0xHPssqngYnbWpniQBT4SEGvqbz6GqgZhh0uRkg77mWYaDKO5SSwGx5HVyBOTlQ.m3u8");
         hls.loadSource("https://video-weaver.tpe01.hls.ttvnw.net/v1/playlist/CpEDXrvs72_x9E_vvlWdbojT1a2l1eR7OZOOCMuSPVXc7uETMNuJhSWfHXYKZ4jPM7X50iwoLiIMpPvdihVzCCAY46dBm9xgfl0I7GjvXr1dE3XmH5JDXxZACEuKBPww_JTGCF__4o0lB0IzMjcybfOkx825u83kJw1Z_ulqnZr2fgN9L7pE2ZAMZcjsEyf_bxFdASrJiR-PUCls_2C8GCbXE8yMpZksUlmv_01T-0qGWbkUF0NO1KqoQC6e9DVtvv1x2L7Hje9mV2yj2pP5XkKs4wdP-3CT-s1Zmj_nP-BkdN5Sdu72GOGjgXKQmA01pKRqS5nzh3YtOewea7JP56MmCf7KfMDPGowltFX2yaucekC0fvmC8CM1q6wa2LN5pGXsMGq8hefYfkFAHGcQamabR0XSAHQyfQs2vfPzJ1Wjrn2dehbwUydkvYLa_--GHSZUx8fs3NYP-UWTcwReqRFQlk4IL1NyNLzMzaC2V3w4gctheY8cKqnOoQ7vM4wLnt300TFnMnXER6UWWMPdygnyQKISEObuYd9jRIcAd2_liLmXASgaDBY8A4ChbBkCI1EdTQ.m3u8");
         
         // hls.loadSource("https://wowza.jwplayer.com/live/jelly.stream/playlist.m3u8");
