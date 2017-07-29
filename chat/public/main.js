@@ -11,6 +11,7 @@ $(function() {
   var $window = $(window);
   var $usernameInput = $('.usernameInput'); // Input for username
   var $messages = $('.messages'); // Messages area
+  var $keyMessages = $('.keymessages'); //Key Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
 
   var $loginPage = $('.login.page'); // The login page
@@ -23,7 +24,7 @@ $(function() {
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
   var userNames = ["Bryan","Ryan", "Alan", "Dvaid", "Linus", "Kobe"];
-  var socket = io.connect('http://10.187.1.128:3000');
+  var socket = io.connect('http://0.0.0.0:3000');
   var chatArray = new Array();
     $.get('chat.txt', function(data){
             chatArray = data.split('\n');
@@ -138,14 +139,21 @@ $(function() {
     if (typeof options.prepend === 'undefined') {
       options.prepend = false;
     }
-
+    if (options.type === 'key') {
+      options.key = true;
+    }
+    console.log(options)
     // Apply options
     if (options.fade) {
       $el.hide().fadeIn(FADE_TIME);
     }
     if (options.prepend) {
       $messages.prepend($el);
-    } else {
+    } 
+    if (options.key) {
+      $keyMessages.append($el);
+      $keyMessages[0].scrollTop = $keyMessages[0].scrollHeight;
+    }else {
       $messages.append($el);
     }
     $messages[0].scrollTop = $messages[0].scrollHeight;
@@ -203,16 +211,26 @@ $(function() {
      }, Math.floor(Math.random() * 1000))
   }
 
+  function pressKey (key) {
+    data = {
+      username: username,
+      message: key
+    }
+    socket.emit('press key', data);
+    addChatMessage(data,{type: 'key'})
+  }
 
   // Keyboard events
+  var event2key = {'65':'a', '66':'b', '67':'c', '68':'d', '69':'e', '70':'f', '71':'g', '72':'h', '73':'i', '74':'j', '75':'k', '76':'l', '77':'m', '78':'n', '79':'o', '80':'p', '81':'q', '82':'r', '83':'s', '84':'t', '85':'u', '86':'v', '87':'w', '88':'x', '89':'y', '90':'z', '37':'left', '39':'right', '38':'up', '40':'down', '13':'enter', '32':'space','48':'0','49':'1','50':'2','51':'3','52':'4','53':'5','54':'6','55':'7','56':'8','57':'9'};
 
   $window.keydown(function (event) {
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
       $currentInput.focus();
     }
+    var keycode = event.which || event.keyCode;
     // When the client hits ENTER on their keyboard
-    if (event.which === 13) {
+    if (keycode === 13) {
       if (username) {
         sendMessage();
         socket.emit('stop typing');
@@ -220,7 +238,13 @@ $(function() {
       } else {
         setUsername();
       }
+    } else {
+      var myKey = event2key[keycode]
+      console.log(keycode, myKey)
+      pressKey(myKey)
     }
+
+
   });
 
   $inputMessage.on('input', function() {
@@ -237,19 +261,6 @@ $(function() {
   // Focus input when clicking on the message input's border
   $inputMessage.click(function () {
     $inputMessage.focus();
-  });
-
-  // Init Control buttom
-  $('.key').click(function (){
-      console.log("press key")
-      key = this.id;
-      console.log(key);
-      data = {
-        username: username,
-        message: key
-      }
-      socket.emit('press key', data);
-      addChatMessage(data)
   });
 
  socket.on('press key', function (data){

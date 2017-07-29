@@ -8,13 +8,16 @@
 <body>
   <ul class="pages">
     <li class="chat page">
+      <div class="key" id="a"><span>A</span></div>
+      <div class="key" id="b"><span>B</span></div>
+      <div class="key" id="c"><span>C</span></div>
       <div class="chatArea">
         <ul class="messages"></ul>
+        <ul class="keymessages"></ul>
       </div>
       <input class="inputMessage" placeholder="Type here..."/>
     </li>
   </ul>
-
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/main.js"></script>
