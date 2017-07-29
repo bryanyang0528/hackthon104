@@ -27,9 +27,9 @@ $(function() {
   var chatArray = new Array();
     $.get('chat.txt', function(data){
             chatArray = data.split('\n');
-            console.log(chatArray);
+            //console.log(chatArray);
         });
-  
+
   setUsername();
   
   function addParticipantsMessage (data) {
@@ -62,7 +62,7 @@ $(function() {
     var message = message
     // Prevent markup from being injected into the message
     message = cleanInput(message);
-    console.log(message)
+    //console.log(message)
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
@@ -239,6 +239,23 @@ $(function() {
     $inputMessage.focus();
   });
 
+  // Init Control buttom
+  $('.key').click(function (){
+      console.log("press key")
+      key = this.id;
+      console.log(key);
+      data = {
+        username: username,
+        message: key
+      }
+      socket.emit('press key', data);
+      addChatMessage(data)
+  });
+
+ socket.on('press key', function (data){
+     addChatMessage(data);
+ });
+
   // Socket events
 
   // Whenever the server emits 'login', log the login message
@@ -257,6 +274,8 @@ $(function() {
   socket.on('new message', function (data) {
     addChatMessage(data);
   });
+
+
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
