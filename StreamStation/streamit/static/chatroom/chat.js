@@ -69,7 +69,7 @@ $(function() {
         setTimeout(function() {
                 var chat = chatArray[Math.floor(Math.random() * 100) % chatArray.length];
                 addMessageElement($messages, formatMessage(chat, userNames[Math.floor(Math.random() * 100) % userNames.length]));
-                if ($messages.children().length > 10) {
+                if ($messages.children().length > 20) {
                     $messages.find('li:first').remove();
                 }
                 loop();  
