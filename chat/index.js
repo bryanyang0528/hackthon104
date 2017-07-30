@@ -51,9 +51,10 @@ io.on('connection', function (socket) {
 
   // when user press any key, we send it to host client
   socket.on('press key', function(data) {
+    console.log('press key: ' + data.message)
     socket.broadcast.emit('press key', {
        username: data.username,
-       key: data.key
+       message: data.message
     });
   });
 
