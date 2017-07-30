@@ -1,5 +1,9 @@
 from socketIO_client import SocketIO, LoggingNamespace
+from pykeyboard import PyKeyboard
+from time import time
+k = PyKeyboard()
 
+ONE_FRAME_IN_MS = 16.67
 
 def on_print_response(*args):
     print('response', args)
@@ -7,8 +11,16 @@ def on_print_response(*args):
 
 def on_press_key(*args):
     print('press_key', args)
-    #do something data.message
-    
+    streetFighter(args['message'])
+
+
+def streetFighter(key):
+    if key == 'Q':
+        tap_key('down')
+        time.sleep(ONE_FRAME_IN_MS)
+        tap_key('right')
+        time.sleep(ONE_FRAME_IN_MS)
+	tap_key('Q')
 
 socketIO = SocketIO('localhost', 3000, LoggingNamespace)
 socketIO.emit('add user', 'testfrompython')
