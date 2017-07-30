@@ -224,9 +224,10 @@ $(function() {
   var event2key = {'65':'a', '66':'b', '67':'c', '68':'d', '69':'e', '70':'f', '71':'g', '72':'h', '73':'i', '74':'j', '75':'k', '76':'l', '77':'m', '78':'n', '79':'o', '80':'p', '81':'q', '82':'r', '83':'s', '84':'t', '85':'u', '86':'v', '87':'w', '88':'x', '89':'y', '90':'z', '37':'left', '39':'right', '38':'up', '40':'down', '13':'enter', '32':'space','48':'0','49':'1','50':'2','51':'3','52':'4','53':'5','54':'6','55':'7','56':'8','57':'9'};
 
   $window.keydown(function (event) {
+    // console.log($inputMessage.is(":focus"));
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
-      $currentInput.focus();
+      // $currentInput.focus();
     }
     var keycode = event.which || event.keyCode;
     // When the client hits ENTER on their keyboard
